@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Happy Birthday - Heart & Bees</title>
+    <title>I LOVE U - Heart & Bees</title>
     <style>
         body { margin: 0; overflow: hidden; background: #000; font-family: 'Arial', sans-serif; }
         canvas { position: absolute; top: 0; left: 0; }
@@ -10,15 +10,25 @@
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             text-align: center; z-index: 10; pointer-events: none;
         }
-        .thai-wish { color: #ff4d6d; font-size: 2.5rem; font-weight: bold; text-shadow: 0 0 15px #ff0000; }
+        .love-text { 
+            color: #ff4d6d; 
+            font-size: 4rem; 
+            font-weight: bold; 
+            text-shadow: 0 0 20px #ff0000, 0 0 40px #ff3366;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
         .bee { position: absolute; font-size: 25px; z-index: 5; }
-        .flower { position: absolute; font-size: 20px; z-index: 4; opacity: 0.7; }
+        .flower { position: absolute; font-size: 22px; z-index: 4; opacity: 0.8; }
     </style>
 </head>
 <body>
     <div class="content">
-        <div class="thai-wish">สุขสันต์วันเกิดนะที่รัก</div>
-        <div style="color: white; letter-spacing: 3px; margin-top: 10px;">HAPPY BIRTHDAY MY LOVE</div>
+        <div class="love-text">I LOVE U💞</div>
     </div>
     <canvas id="heartCanvas"></canvas>
 
@@ -32,6 +42,7 @@
             canvas.height = window.innerHeight;
         }
 
+        // Công thức tạo hình trái tim từ video tANMoc2FYAI
         function getHeartPoint(t) {
             return {
                 x: 16 * Math.pow(Math.sin(t), 3),
@@ -53,53 +64,4 @@
             }
             update() {
                 this.x += (this.targetX - this.x) * this.speed;
-                this.y += (this.targetY - this.y) * this.speed;
-                if (Math.abs(this.x - this.targetX) < 1) this.reset();
-            }
-            draw() {
-                ctx.fillStyle = "#ff3366";
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        for (let i = 0; i < 1500; i++) particles.push(new Particle());
-
-        function animate() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => { p.update(); p.draw(); });
-            requestAnimationFrame(animate);
-        }
-
-        function createDecor(emoji, className, isFalling) {
-            const el = document.createElement('div');
-            el.innerHTML = emoji;
-            el.className = className;
-            el.style.left = Math.random() * 100 + 'vw';
-            el.style.top = isFalling ? '-5vh' : Math.random() * 100 + 'vh';
-            document.body.appendChild(el);
-
-            let x = parseFloat(el.style.left);
-            let y = parseFloat(el.style.top);
-            let speedY = isFalling ? Math.random() * 1 + 0.5 : (Math.random() - 0.5) * 2;
-            let speedX = (Math.random() - 0.5) * 2;
-
-            function move() {
-                y += speedY; x += speedX;
-                if (y > 105) { y = -5; x = Math.random() * 100; }
-                if (x < -5) x = 105; if (x > 105) x = -5;
-                el.style.top = y + 'vh'; el.style.left = x + 'vw';
-                requestAnimationFrame(move);
-            }
-            move();
-        }
-
-        init(); animate();
-        for(let i=0; i<15; i++) createDecor('🐝', 'bee', false);
-        for(let i=0; i<20; i++) createDecor('🌹', 'flower', true);
-        window.addEventListener('resize', init);
-    </script>
-</body>
-</html>
+                this.y += (this.targetY - this.
