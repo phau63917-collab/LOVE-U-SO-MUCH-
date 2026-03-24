@@ -159,14 +159,11 @@
 
     <div class="heart-container" id="heart-box">
         <div class="thai-text">สุขสันต์วันเกิด</div>
-        <img src="IMG_20260221_152459_861.jpg" class="photo" style="top:10%; left:25%">
-        <img src="IMG_20260221_152453_005.jpg" class="photo" style="top:10%; left:55%">
-        <img src="IMG_20260308_222531_235.jpg" class="photo" style="top:25%; left:10%">
-        <img src="IMG_20260319_231925_575.jpg" class="photo" style="top:25%; left:40%">
-        <img src="IMG_20260319_231925_575.jpg" class="photo" style="top:25%; left:70%">
-        <img src="lv_0_20260310132937.jpg" class="photo" style="top:50%; left:20%">
-        <img src="Gemini_Generated_Image_ji19myj1i9myj...png" class="photo" style="top:50%; left:60%">
-        <img src="Screenshot_2026-01-27-14-27-17-89_1c3...jpg" class="photo" style="top:70%; left:40%">
+        <div class="bee">🐝</div>
+        <div class="bee">🐝</div>
+        <div class="bee">🐝</div>
+        <div class="bee">🐝</div>
+        <div class="bee">🐝</div>
     </div>
 
     <script>
@@ -202,18 +199,13 @@
         }
 
         function startBees() {
-            for (let i = 0; i < 5; i++) {
-                const bee = document.createElement('div');
-                bee.className = 'bee';
-                bee.innerHTML = '🐝';
-                document.body.appendChild(bee);
-                moveBee(bee);
-            }
+            const bees = document.querySelectorAll('.bee');
+            bees.forEach(bee => moveBee(bee));
         }
 
         function moveBee(bee) {
-            const x = Math.random() * window.innerWidth;
-            const y = Math.random() * window.innerHeight;
+            const x = Math.random() * (window.innerWidth - 100);
+            const y = Math.random() * (window.innerHeight - 100);
             bee.style.left = x + 'px';
             bee.style.top = y + 'px';
             setTimeout(() => moveBee(bee), Math.random() * 2000 + 1000);
