@@ -2,184 +2,214 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Happy Birthday - Ly Tuan Heart</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chúc Mừng Sinh Nhật</title>
     <style>
         body {
             margin: 0;
-            overflow: hidden;
-            background-color: #000;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            background-color: #0a0a0a; /* Nền đen */
+            overflow: hidden;
             font-family: 'Arial', sans-serif;
         }
 
-        /* Nền sao */
-        #star-canvas {
-            position: absolute;
+        /* Hiệu ứng sao trắng lung linh trên nền đen */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             z-index: 0;
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
         }
 
-        /* Nút bấm */
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: twinkle var(--duration) infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Nút bấm ban đầu */
         #start-btn {
             z-index: 10;
             padding: 15px 40px;
-            font-size: 20px;
-            background: transparent;
-            color: #fff;
-            border: 2px solid #fff;
-            border-radius: 30px;
+            font-size: 22px;
+            background: #000;
+            color: white;
+            border: 2px solid white;
+            border-radius: 5px;
             cursor: pointer;
-            box-shadow: 0 0 20px rgba(255,255,255,0.3);
             transition: 0.3s;
+            box-shadow: 0 0 15px rgba(255,255,255,0.2);
         }
 
-        #start-btn:hover { background: #fff; color: #000; }
+        #start-btn:hover {
+            background: white;
+            color: black;
+        }
 
-        /* Bì thư đen */
-        #envelope-wrapper {
+        /* Bức thư đen */
+        .envelope-container {
             display: none;
+            position: relative;
             z-index: 5;
-            transition: all 1s ease;
+            transition: opacity 0.8s ease;
         }
 
         .envelope {
-            width: 250px;
-            height: 150px;
+            width: 280px;
+            height: 180px;
             background: #1a1a1a;
-            position: relative;
             border: 1px solid #333;
+            position: relative;
         }
 
         .envelope::after {
             content: "";
             position: absolute;
             top: 0;
-            border-top: 80px solid #252525;
-            border-left: 125px solid transparent;
-            border-right: 125px solid transparent;
+            border-top: 100px solid #222;
+            border-left: 140px solid transparent;
+            border-right: 140px solid transparent;
         }
 
-        .fade-out { opacity: 0; transform: scale(0); }
-
-        /* Trái tim Lý Tuân */
-        #heart-canvas {
-            display: none;
-            position: absolute;
-            z-index: 2;
-        }
-
-        .thai-text {
-            position: absolute;
-            z-index: 3;
-            color: #ff4d6d;
-            font-size: 35px;
-            font-weight: bold;
-            display: none;
-            text-shadow: 0 0 15px #ff4d6d;
+        /* Hiệu ứng biến mất bức thư */
+        .fade-out {
+            opacity: 0;
+            transform: scale(0.5);
             pointer-events: none;
         }
 
+        /* Container Trái Tim Hình Ảnh */
+        .heart-container {
+            display: none;
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .heart-active {
+            display: block;
+            opacity: 1;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            15% { transform: scale(1.05); }
+            30% { transform: scale(1); }
+        }
+
+        /* Sắp xếp ảnh thành hình trái tim */
+        .photo {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border: 2px solid white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        /* Chữ tiếng Thái ở giữa */
+        .thai-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            text-shadow: 0 0 20px #ff4d6d, 0 0 30px #ff4d6d;
+            z-index: 20;
+            white-space: nowrap;
+        }
+
+        /* Các con ong bay */
         .bee {
             position: absolute;
             font-size: 25px;
-            z-index: 4;
-            pointer-events: none;
+            z-index: 25;
+            transition: 0.5s;
         }
     </style>
 </head>
 <body>
 
-    <canvas id="star-canvas"></canvas>
-    <button id="start-btn">คลิกที่นี่</button>
+    <div class="stars" id="star-field"></div>
 
-    <div id="envelope-wrapper">
+    <button id="start-btn" onclick="openMessage()">คลิกที่นี่</button>
+
+    <div class="envelope-container" id="env-cont">
         <div class="envelope"></div>
     </div>
 
-    <canvas id="heart-canvas"></canvas>
-    <div id="thai-msg" class="thai-text">สุขสันต์วันเกิด</div>
+    <div class="heart-container" id="heart-box">
+        <div class="thai-text">สุขสันต์วันเกิด</div>
+        <div class="bee">🐝</div>
+        <div class="bee">🐝</div>
+        <div class="bee">🐝</div>
+        <div class="bee">🐝</div>
+        <div class="bee">🐝</div>
+    </div>
 
     <script>
-        const btn = document.getElementById('start-btn');
-        const env = document.getElementById('envelope-wrapper');
-        const heartCanvas = document.getElementById('heart-canvas');
-        const msg = document.getElementById('thai-msg');
-
-        // Khởi tạo nền sao
-        const starCtx = document.getElementById('star-canvas').getContext('2d');
-        let stars = [];
-        function initStars() {
-            starCtx.canvas.width = window.innerWidth;
-            starCtx.canvas.height = window.innerHeight;
-            for(let i=0; i<200; i++) {
-                stars.push({x: Math.random()*innerWidth, y: Math.random()*innerHeight, r: Math.random()*1.5, d: Math.random()*2});
-            }
+        // Tạo sao nền
+        const starField = document.getElementById('star-field');
+        for (let i = 0; i < 150; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            const size = Math.random() * 3 + 'px';
+            star.style.width = size;
+            star.style.height = size;
+            star.style.setProperty('--duration', Math.random() * 3 + 2 + 's');
+            starField.appendChild(star);
         }
-        function drawStars() {
-            starCtx.clearRect(0,0,innerWidth,innerHeight);
-            starCtx.fillStyle = "white";
-            stars.forEach(s => {
-                starCtx.beginPath();
-                starCtx.arc(s.x, s.y, s.r, 0, Math.PI*2);
-                starCtx.fill();
-            });
-            requestAnimationFrame(drawStars);
-        }
-        initStars(); drawStars();
 
-        // Xử lý bấm nút
-        btn.onclick = () => {
-            btn.style.display = 'none';
+        function openMessage() {
+            document.getElementById('start-btn').style.display = 'none';
+            const env = document.getElementById('env-cont');
             env.style.display = 'block';
+
+            // Sau 1 giây, bức thư biến mất và trái tim hiện ra
             setTimeout(() => {
                 env.classList.add('fade-out');
                 setTimeout(() => {
                     env.style.display = 'none';
-                    showHeart();
-                }, 1000);
+                    const heart = document.getElementById('heart-box');
+                    heart.classList.add('heart-active');
+                    startBees();
+                }, 800);
             }, 1000);
-        };
+        }
 
-        // Code Trái tim Lý Tuân (Simplified Version)
-        function showHeart() {
-            heartCanvas.style.display = 'block';
-            msg.style.display = 'block';
-            const ctx = heartCanvas.getContext('2d');
-            heartCanvas.width = window.innerWidth;
-            heartCanvas.height = window.innerHeight;
+        function startBees() {
+            const bees = document.querySelectorAll('.bee');
+            bees.forEach(bee => moveBee(bee));
+        }
 
-            const heartPoints = [];
-            const particles = [];
-
-            function getHeartPoint(t) {
-                let x = 16 * Math.pow(Math.sin(t), 3);
-                let y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
-                return { x: x * 15, y: -y * 15 };
-            }
-
-            for (let i = 0; i < 500; i++) {
-                heartPoints.push(getHeartPoint(Math.PI * 2 * i / 500));
-            }
-
-            function createParticle() {
-                const point = heartPoints[Math.floor(Math.random() * heartPoints.length)];
-                return {
-                    x: heartCanvas.width / 2 + point.x,
-                    y: heartCanvas.height / 2 + point.y,
-                    vx: (Math.random() - 0.5) * 2,
-                    vy: (Math.random() - 0.5) * 2,
-                    life: Math.random() * 30 + 20
-                };
-            }
-
-            function draw() {
-                ctx.clearRect(0, 0, heartCanvas.width, heartCanvas.height);
-                ctx.fillStyle = "#ff4d6d";
-                if (particles.length < 2000) {
-                    for(let i=0; i<20; i++) particles.push(createParticle());
-                }
-
-                particles.forEach((p, index
+        function moveBee(bee) {
+            const x = Math.random() * (window.innerWidth - 100);
+            const y = Math.random() * (window.innerHeight - 100);
+            bee.style.left = x + 'px';
+            bee.style.top = y + 'px';
+            setTimeout(() => moveBee(bee), Math.random() * 2000 + 1000);
+        }
+    </script>
+</body>
+</html>
