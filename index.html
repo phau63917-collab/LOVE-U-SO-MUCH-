@@ -6,186 +6,217 @@
     <title>Chúc Mừng Sinh Nhật</title>
     <style>
         body {
+            margin: 0;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background-color: #ffeef0;
-            margin: 0;
+            background-color: #0a0a0a; /* Nền đen */
             overflow: hidden;
             font-family: 'Arial', sans-serif;
         }
 
-        /* Nút Bấm Ban Đầu */
-        #start-btn {
-            padding: 15px 30px;
-            font-size: 20px;
-            background-color: #ff4d6d;
-            color: white;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            z-index: 10;
+        /* Hiệu ứng sao trắng lung linh trên nền đen */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
         }
 
-        /* Bì thư */
-        .envelope-wrapper {
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: twinkle var(--duration) infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Nút bấm ban đầu */
+        #start-btn {
+            z-index: 10;
+            padding: 15px 40px;
+            font-size: 22px;
+            background: #000;
+            color: white;
+            border: 2px solid white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 0 15px rgba(255,255,255,0.2);
+        }
+
+        #start-btn:hover {
+            background: white;
+            color: black;
+        }
+
+        /* Bức thư đen */
+        .envelope-container {
             display: none;
             position: relative;
-            cursor: pointer;
-            transition: transform 0.5s;
+            z-index: 5;
+            transition: opacity 0.8s ease;
         }
 
         .envelope {
+            width: 280px;
+            height: 180px;
+            background: #1a1a1a;
+            border: 1px solid #333;
             position: relative;
-            width: 300px;
-            height: 200px;
-            background: #f08080;
-            border-bottom-left-radius: 10px;
-            border-bottom-right-radius: 10px;
         }
 
-        .envelope::before {
+        .envelope::after {
             content: "";
             position: absolute;
             top: 0;
-            z-index: 2;
-            border-top: 130px solid #f08080;
-            border-left: 150px solid transparent;
-            border-right: 150px solid transparent;
-            transform-origin: top;
-            transition: transform 0.5s 0.3s;
+            border-top: 100px solid #222;
+            border-left: 140px solid transparent;
+            border-right: 140px solid transparent;
         }
 
-        /* Khi mở thư */
-        .envelope.open::before {
-            transform: rotateX(180deg);
-            z-index: 0;
+        /* Hiệu ứng biến mất bức thư */
+        .fade-out {
+            opacity: 0;
+            transform: scale(0.5);
+            pointer-events: none;
         }
 
-        /* Nội dung bên trong (Bánh và Ảnh) */
-        .letter-content {
+        /* Container Trái Tim Hình Ảnh */
+        .heart-container {
+            display: none;
             position: absolute;
-            bottom: 0;
+            width: 600px;
+            height: 600px;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .heart-active {
+            display: block;
+            opacity: 1;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            15% { transform: scale(1.05); }
+            30% { transform: scale(1); }
+        }
+
+        /* Sắp xếp ảnh thành hình trái tim */
+        .photo {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border: 2px solid white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        /* Chữ tiếng Thái ở giữa */
+        .thai-text {
+            position: absolute;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            height: 0;
-            background: white;
-            transition: height 0.5s 0.6s, bottom 0.5s 0.6s;
-            overflow: hidden;
-            border-radius: 10px;
-            text-align: center;
-            padding: 0;
-            box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            text-shadow: 0 0 20px #ff4d6d, 0 0 30px #ff4d6d;
+            z-index: 20;
+            white-space: nowrap;
         }
 
-        .envelope.open .letter-content {
-            height: 450px;
-            bottom: 100px;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        .letter-content img {
-            max-width: 100%;
-            border-radius: 10px;
-            margin-bottom: 15px;
-        }
-
-        /* Con ong bay */
+        /* Các con ong bay */
         .bee {
             position: absolute;
-            font-size: 30px;
-            pointer-events: none;
-            z-index: 5;
-            animation: fly 5s linear infinite;
-        }
-
-        @keyframes fly {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            25% { transform: translate(100px, -50px) rotate(20deg); }
-            50% { transform: translate(200px, 50px) rotate(-20deg); }
-            75% { transform: translate(-100px, 100px) rotate(10deg); }
-            100% { transform: translate(0, 0) rotate(0deg); }
-        }
-
-        /* Trái tim rơi */
-        .heart {
-            position: absolute;
-            color: #ff4d6d;
-            font-size: 20px;
-            pointer-events: none;
-            animation: fall linear forwards;
-        }
-
-        @keyframes fall {
-            to { transform: translateY(100vh); opacity: 0; }
+            font-size: 25px;
+            z-index: 25;
+            transition: 0.5s;
         }
     </style>
 </head>
 <body>
 
-    <button id="start-btn" onclick="openEnvelope()">คลิกที่นี่</button>
+    <div class="stars" id="star-field"></div>
 
-    <div class="envelope-wrapper" id="envelope-wrapper">
-        <div class="envelope" id="envelope">
-            <div class="letter-content">    
-    		 <p>Chúc mừng sinh nhật bạn!</p>
-   		 <img src="Screenshot_2026-01-27-14-27-17-89_1c3...jpg" alt="Ảnh 1">
-    		 <img src="IMG_20260221_152459_861.jpg" alt="Ảnh 2">
-    		 <img src="IMG_20260221_152453_005.jpg" alt="Ảnh 3">
-    		 <img src="IMG_20260308_222531_235.jpg" alt="Ảnh 4">
-    		 <img src="IMG_20260319_231925_575.jpg" alt="Ảnh 5">
-   		 <img src="lv_0_20260310132937.jpg" alt="Ảnh 6">
-		</div>
-        </div>
+    <button id="start-btn" onclick="openMessage()">คลิกที่นี่</button>
+
+    <div class="envelope-container" id="env-cont">
+        <div class="envelope"></div>
+    </div>
+
+    <div class="heart-container" id="heart-box">
+        <div class="thai-text">สุขสันต์วันเกิด</div>
+        <img src="IMG_20260221_152459_861.jpg" class="photo" style="top:10%; left:25%">
+        <img src="IMG_20260221_152453_005.jpg" class="photo" style="top:10%; left:55%">
+        <img src="IMG_20260308_222531_235.jpg" class="photo" style="top:25%; left:10%">
+        <img src="IMG_20260319_231925_575.jpg" class="photo" style="top:25%; left:40%">
+        <img src="IMG_20260319_231925_575.jpg" class="photo" style="top:25%; left:70%">
+        <img src="lv_0_20260310132937.jpg" class="photo" style="top:50%; left:20%">
+        <img src="Gemini_Generated_Image_ji19myj1i9myj...png" class="photo" style="top:50%; left:60%">
+        <img src="Screenshot_2026-01-27-14-27-17-89_1c3...jpg" class="photo" style="top:70%; left:40%">
     </div>
 
     <script>
-        function openEnvelope() {
-            // Ẩn nút và hiện bì thư
+        // Tạo sao nền
+        const starField = document.getElementById('star-field');
+        for (let i = 0; i < 150; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            const size = Math.random() * 3 + 'px';
+            star.style.width = size;
+            star.style.height = size;
+            star.style.setProperty('--duration', Math.random() * 3 + 2 + 's');
+            starField.appendChild(star);
+        }
+
+        function openMessage() {
             document.getElementById('start-btn').style.display = 'none';
-            const wrapper = document.getElementById('envelope-wrapper');
-            wrapper.style.display = 'block';
-            
-            // Tự động mở thư sau một chút
+            const env = document.getElementById('env-cont');
+            env.style.display = 'block';
+
+            // Sau 1 giây, bức thư biến mất và trái tim hiện ra
             setTimeout(() => {
-                document.getElementById('envelope').classList.add('open');
-                startEffects();
-            }, 500);
+                env.classList.add('fade-out');
+                setTimeout(() => {
+                    env.style.display = 'none';
+                    const heart = document.getElementById('heart-box');
+                    heart.classList.add('heart-active');
+                    startBees();
+                }, 800);
+            }, 1000);
         }
 
-        function startEffects() {
-            // Tạo trái tim liên tục
-            setInterval(createHeart, 300);
-            // Tạo con ong
-            createBee();
-            createBee();
+        function startBees() {
+            for (let i = 0; i < 5; i++) {
+                const bee = document.createElement('div');
+                bee.className = 'bee';
+                bee.innerHTML = '🐝';
+                document.body.appendChild(bee);
+                moveBee(bee);
+            }
         }
 
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.classList.add('heart');
-            heart.innerHTML = '❤️';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.top = '-20px';
-            heart.style.duration = (Math.random() * 3 + 2) + 's';
-            heart.style.opacity = Math.random();
-            document.body.appendChild(heart);
-            setTimeout(() => heart.remove(), 5000);
-        }
-
-        function createBee() {
-            const bee = document.createElement('div');
-            bee.classList.add('bee');
-            bee.innerHTML = '🐝';
-            bee.style.left = Math.random() * 80 + 'vw';
-            bee.style.top = Math.random() * 80 + 'vh';
-            // Mỗi con ong bay một kiểu khác nhau
-            bee.style.animationDuration = (Math.random() * 5 + 5) + 's';
-            document.body.appendChild(bee);
+        function moveBee(bee) {
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight;
+            bee.style.left = x + 'px';
+            bee.style.top = y + 'px';
+            setTimeout(() => moveBee(bee), Math.random() * 2000 + 1000);
         }
     </script>
 </body>
